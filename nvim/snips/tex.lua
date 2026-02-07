@@ -186,7 +186,7 @@ local expr={
   {trig="@{",snip={ t({"\\left\\{","\\begin{matrix}",""}), i(1), t({"","\\end{matrix}","\\right\\}"}) }},
   {trig="_",snip={ t("_{"), i(1), t("}") }},
   {trig="^",snip={ t("^{"), i(1), t("}") }},
-  {trig = "bf",snip={ t("\\boldsymbol{"), i(1), t("}") }},
+  {trig = "bf",snip={ t("\\mathbf{"), i(1), t("}") }},
   {trig = "tt",snip={ t("\\text{"), i(1), t("}") }},
   {trig = "sqrt",snip={ t("\\sqrt{"), i(1), t("}") }},
   {trig = "fr",snip={ t("\\frac{"), i(1), t("}{"),i(2), t("}") }},

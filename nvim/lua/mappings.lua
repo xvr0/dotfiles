@@ -66,7 +66,7 @@ local function RunFile()
         -- Execute Python script
         command = 'terminal python3 ' .. filename
     elseif filetype== 'tex' then
-        command= 'TeXpresso %'
+        command= 'VimtexCompile'
     elseif filetype == 'sh' or filetype == 'bash' then
         -- Execute shell script
         command = 'terminal ' .. filename
@@ -104,6 +104,19 @@ map("n", "<leader>ff", "<cmd> Telescope find_files <CR>")
 map("n", "<leader>fo", "<cmd> Telescope oldfiles <CR>")
 map("n", "<leader>fw", "<cmd> Telescope live_grep <CR>")
 map("n", "<leader>gt", "<cmd> Telescope git_status <CR>")
+
+-- spell check
+local function ToggleSpell(lang)
+  if vim.o.spell and vim.o.spelllang == lang then
+    vim.o.spell = false
+  else
+    vim.o.spell = true
+    vim.o.spelllang = lang
+  end
+end
+
+map("n", "<leader>spe", function() ToggleSpell("en_us") end)
+map("n", "<leader>spg", function() ToggleSpell("de_de") end)
 
 -- bufferline, cycle buffers
 map("n", "<Tab>", "<cmd> BufferLineCycleNext <CR>")

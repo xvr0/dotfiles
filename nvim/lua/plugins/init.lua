@@ -1,9 +1,5 @@
 return {
   { "nvim-lua/plenary.nvim", lazy=true },
-  {
-    "let-def/texpresso.vim",
-    ft = { "tex", "plaintex" },
-},
   "christoomey/vim-tmux-navigator",
   cmd = {
     "TmuxNavigateLeft",
@@ -33,6 +29,7 @@ return {
       }
     }
     vim.g.vimtex_quickfix_mode=0
+    vim.g.vimtex_spell_enabled = 1
     vim.g.concceallevel=2
     vim.g.tex_conceal="abdmg"
   end
