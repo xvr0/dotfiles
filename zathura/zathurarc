@@ -1,0 +1,18 @@
+# --- Base Settings ---
+set synctex-editor-command "nvr --remote-silent +%{line} %{input}"
+set recolor true
+set recolor-keephue true
+set selection-clipboard clipboard
+# --- Default Startup Theme (Dark Gruvbox) ---
+set recolor-lightcolor "#282828" 
+set recolor-darkcolor "#ebdbb2"
+# Make the empty space/borders match the Dark Gruvbox background
+set default-bg "#282828"
+# --- Theme Swapping Hotkeys ---
+
+# Map <F7> to Dark Gruvbox 
+# Map <F7> to Dark Gruvbox (Document AND Borders)
+map <F7> feedkeys ":set recolor-lightcolor \#282828<Return>:set recolor-darkcolor \#ebdbb2<Return>:set default-bg \#282828<Return>"
+
+# Map <F8> to Light Gruvbox (Document AND Borders)
+map <F8> feedkeys ":set recolor-lightcolor \#ebdbb2<Return>:set recolor-darkcolor \#282828<Return>:set default-bg \#ebdbb2<Return>"

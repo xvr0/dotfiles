@@ -41,40 +41,35 @@ local function switch_terminal()
     end
   end
 
-  vim.cmd("term")  -- You can use :vsplit if you prefer vertical split
+  vim.cmd("term")  
 end
 
--- Map <leader>t to toggle_terminal
 vim.keymap.set('n', '<leader>t', switch_terminal, { noremap = true, silent = true })
 
 map("n","<leader>bt","<cmd>bd!<CR>")
 
 local function RunFile()
-    -- Ensure the current file is saved before running
     vim.cmd('w')
 
-    -- Get the current filetype (e.bo.filetype is buffer-local option)
     local filetype = vim.bo.filetype
     
-    -- Get the current file path, escaped for safe shell execution
     local filename = vim.fn.shellescape(vim.fn.expand('%'))
 
-    -- The command to run in the terminal
     local command = nil
 
     if filetype == 'python' then
-        -- Execute Python script
         command = 'terminal python3 ' .. filename
-    elseif filetype== 'tex' then
-        command= 'VimtexCompile'
+    elseif filetype == 'tex' then
+        
+        command = 'VimtexCompile'
     elseif filetype == 'sh' or filetype == 'bash' then
-        -- Execute shell script
         command = 'terminal ' .. filename
     elseif filetype == 'c' then
-        -- Compile and run C code (Requires gcc and assumes you want to run immediately)
-        local base_name = vim.fn.expand('%:r') -- filename without extension
-        -- Use && to chain the commands: compile, then run the executable
+        local base_name = vim.fn.expand('%:r') 
         command = 'terminal gcc ' .. filename .. ' -o ' .. base_name .. ' && ./' .. base_name
+    elseif filetype == 'matlab' then
+        command = 'terminal matlab -batch "run(' .. filename .. ')"'
+        -- command = 'terminal matlab -nodesktop -nosplash -r "run(' .. filename .. ')"'
     end
 
     if command then
@@ -83,7 +78,7 @@ local function RunFile()
         vim.notify('No run command defined for filetype: ' .. filetype, vim.log.levels.WARN)
     end
 end 
--- Create a Normal mode mapping (e.g., F5) to run the file
+
 vim.keymap.set('n', '<leader>x', RunFile, {
     desc = 'Run/Execute Current File (Filetype-Aware)',
     silent = true
@@ -131,3 +126,46 @@ map("v", "<leader>/", "gc", { remap = true })
 map("n", "<leader>fm", function()
   require("conform").format()
 end)
+
+-------------------------------
+--  EDIT SNIPPETS MAP
+-------------------------------
+local function EditSnippets()
+    local ft = vim.bo.filetype
+    
+    if ft == "" then
+        vim.notify("No filetype detected for current buffer.", vim.log.levels.WARN)
+        return
+    end
+    local snip_path = vim.fn.expand("~/.config/nvim/snips/" .. ft .. ".lua")
+    vim.cmd("edit " .. snip_path)
+end
+
+map("n", "<leader>sn", EditSnippets, { 
+    desc = "Edit Snippets for Current Filetype", 
+    silent = true 
+})
+
+vim.keymap.set('n', '<leader>r', function()
+    local filename = vim.fn.expand('%:p') -- Get absolute path of current file
+    
+    -- Find the first open terminal buffer
+    local term_chan = nil
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buftype == 'terminal' then
+            term_chan = vim.bo[buf].channel
+            break
+        end
+    end
+
+    if term_chan then
+        -- Save the file first
+        vim.cmd('write')
+        -- Send the run command to the MATLAB terminal
+        -- Note: We send \r (Enter) at the end to execute it
+        vim.fn.chansend(term_chan, "run('" .. filename .. "')\r")
+        print("Sent to MATLAB REPL")
+    else
+        print("No terminal found! Open a terminal and run 'matlab -nodesktop -nosplash' first.")
+    end
+end, { desc = "Run MATLAB script in existing terminal" })

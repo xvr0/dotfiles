@@ -1,4 +1,4 @@
-exec --no-startup-id sudo \etc\bin\logid &
+# exec --no-startup-id sudo \etc\bin\logid &
 #exec --no-startup-id picom -CGb
 # source is available here:
 # https://raw.githubusercontent.com/endeavouros-team/endeavouros-i3wm-setup/master/.config/i3/config
@@ -24,14 +24,15 @@ exec --no-startup-id sudo \etc\bin\logid &
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango: JetBrainsMonoNerdFontMono 24
-
+# Toggle X11 DPI scaling
+bindsym $mod+Shift+d exec --no-startup-id ~/.config/i3/scripts/dpi-toggle.sh
 # set the mod key to the winkey:
 set $mod Mod4
 
 #####################
 # workspace layout: #
 #####################
-
+bindsym $mod+F10 exec --no-startup-id ~/.config/i3/scripts/screen_toggle.sh
 # default i3 tiling mode:
 workspace_layout default
 
@@ -298,7 +299,8 @@ bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 bindsym $mod+p exec --no-startup-id /usr/local/bin/switch-audio-port
 
 ## App shortcuts
-bindsym $mod+w exec --no-startup-id /usr/bin/chromium --force-device-scale-factor=2
+# bindsym $mod+w exec --no-startup-id /usr/bin/chromium --force-device-scale-factor=2
+bindsym $mod+w exec --no-startup-id /usr/bin/brave --force-device-scale-factor=2
 bindsym $mod+y exec --no-startup-id /usr/bin/zeditor --force-device-scale-factor=2
 bindsym $mod+n exec /usr/bin/ranger
 bindsym Print exec --no-startup-id scrot ~/%Y-%m-%d-%T-screenshot.png && notify-send "Screenshot saved to ~/$(date +"%Y-%m-%d-%T")-screenshot.png"
@@ -599,5 +601,13 @@ bindsym $mod+d exec --no-startup-id alacritty --title 'fzf-menu' -e sh -c 'i3-dm
 for_window [title="fzf-menu"] floating enable, resize set 30ppt 30ppt, move position center
 
 exec --no-startup-id feh --bg-scale /home/xaver/.wallpaper/mono.png
-exec --no-startup-id picom -f & 
+# exec --no-startup-id picom -f & 
 exec --no-startup-id nm-applet &
+# Start compositor
+exec_always --no-startup-id picom -b
+# Toggle Picom Inversion Shader
+bindsym $mod+i exec --no-startup-id /home/xaver/.config/i3/scripts/toggle_shader.sh
+# MATLAB floating windows
+for_window [class="MATLAB R2024b - academic use" title="Workspace"] floating enable
+for_window [class="MATLAB R2024b - academic use" title="Figure.*"] floating enable
+for_window [class="Matplotlib"] floating enable

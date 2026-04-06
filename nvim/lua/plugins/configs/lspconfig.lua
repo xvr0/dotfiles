@@ -38,7 +38,53 @@ capabilities.textDocument.completion.completionItem = {
   },
 }
 
+
+
+
 vim.lsp.config("*", { capabilities = capabilities })
-local servers = { "pyright","html", "cssls" , 'lua_ls' }
+
+-- --- ADD THIS BLOCK FOR MATLAB ---
+vim.lsp.config("matlab_ls", {
+  -- 1. Explicitly tell Neovim what command to run
+  cmd = { "matlab-language-server", "--stdio" },
+
+  -- 2. Restrict it to only attach to MATLAB files
+  filetypes = { "matlab" },
+
+  -- 3. Pass a RAW STRING for the root directory (Native Neovim requirement)
+  root_dir = vim.fn.getcwd(),
+
+  -- 4. Pass your custom installation path
+  settings = {
+    matlab = {
+      installPath = vim.fn.expand("~") .. "/usr/local/MATLAB/R2024b"
+    }
+  }
+})
+--
+-- --- ADD THIS BLOCK FOR MATLAB ---
+-- vim.lsp.config("matlab_ls", {
+--   -- Point EXACTLY to where Mason installed the binary
+--   cmd = { vim.fn.stdpath("data") .. "/mason/bin/matlab-language-server", "--stdio" },
+--
+--   filetypes = { "matlab" },
+--
+--   root_dir = vim.fn.getcwd(),
+--
+--   settings = {
+--     matlab = {
+--       -- The root directory of your R2024b installation:
+--       installPath = "/usr/local/MATLAB/R2024b", 
+--       indexWorkspace = true,
+--       telemetry = false,
+--     }
+--   }
+-- })
+-- ---------------------------------
+-- -- ---------------------------------
+-- ---------------------------------
+
+-- Add 'matlab_ls' to your table of servers:
+local servers = { "pyright", "html", "cssls", "lua_ls", "matlab_ls" }
 
 vim.lsp.enable(servers)

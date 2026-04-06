@@ -5,8 +5,12 @@ export OMP_NUM_THREADS=1
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export ELITBOARDDIR="$HOME/nes/arm/toolchain/bin"
-alias vi-latex='NVIM_APPNAME=nvim-latex nvim'
+# alias vi-latex='NVIM_APPNAME=nvim-latex nvim'
+# Set environment variables for IHP PDK
+export PDK_ROOT="$HOME/pdks/IHP-Open-PDK"
+export PDK="ihp-sg13g2"
 
+alias cl='~/clean.sh'
 
 rg() {
     TEMPFILE="$(mktemp)"
@@ -118,12 +122,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 PATH=/usr/local/texlive/2024/bin/x86_64-linux:/sbin:/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/xaver/.cargo/bin:/home/xaver/.scripts:$ELITBOARDDIR
-export PATH=~/opt/openEMS/bin:$PATH
-export PATH="$HOME/xaver/.local/bin:$PATH"
-export PATH=$PATH:/opt/rocm/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/rocm/lib:/opt/rocm/hip/lib
-export HSA_OVERRIDE_GFX_VERSION=11.0.0
-export ROCM_PATH=/opt/rocm
 
 
 # >>> juliaup initialize >>>
@@ -151,4 +149,9 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-alias lvim='XDG_CONFIG_HOME=/home/xaver/.config/lvim nvim'
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:/home/xaver/intelFPGA/20.1/modelsim_ase/bin"
+# export PATH="$HOME/matlab/2025/bin:$PATH"
+export PATH="$PATH:/home/xaver/intelFPGA_lite/20.1/quartus/bin"
+export PATH="$PATH:/home/xaver/LEL/plecs"
+export PATH="$PATH:/usr/local/MATLAB/R2024b/bin"

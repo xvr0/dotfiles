@@ -42,10 +42,25 @@ return {
     require "plugins.configs.gruvbox"
   end
 },
-
-
+{
+  "jbyuki/nabla.nvim",
+  keys = {
+    { "<leader>p", function() require("nabla").popup() end, desc = "Preview math popup" },
+    -- Add this new line:
+    { "<leader>n", function() require("nabla").toggle_virt() end, desc = "Toggle inline math" },
+  },
+},
+{
+  "let-def/texpresso.vim",
+  ft = { "tex", "latex" }, -- Only load this plugin for LaTeX files
+  keys = {
+    -- Let's create a custom shortcut to launch it
+    { "<leader>tx", "<cmd>TeXpresso %<CR>", desc = "Launch Texpresso" },
+  },
+},
   {
     "nvim-treesitter/nvim-treesitter",
+branch = "main",
     build = ":TSUpdate",
     config = function()
       require "plugins.configs.treesitter"
@@ -69,12 +84,21 @@ return {
 
       -- snippets engine
 {
-  "L3MON4D3/LuaSnip",
+"L3MON4D3/LuaSnip",
   config = function()
-    require("luasnip.loaders.from_vscode").lazy_load()
-    require("luasnip.loaders.from_vscode").lazy_load({ paths = { vim.fn.stdpath("config") .. "/snips" } })
-  require("luasnip.loaders.from_lua").lazy_load({
-    paths = vim.fn.stdpath("config") .. "/snips"})
+    -- 1. Load global VSCode snippets, BUT explicitly exclude VHDL
+    require("luasnip.loaders.from_vscode").lazy_load({
+      exclude = { "vhdl" }
+    })
+    
+    -- 2. Load custom VSCode JSON snippets from your snips directory (if any)
+    require("luasnip.loaders.from_vscode").lazy_load({ 
+      paths = { vim.fn.stdpath("config") .. "/snips" } 
+    })
+    
+    require("luasnip.loaders.from_lua").lazy_load({
+      paths = vim.fn.stdpath("config") .. "/snips"
+    })
   end,
 },
 

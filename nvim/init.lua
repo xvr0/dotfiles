@@ -28,4 +28,11 @@ require("gruvbox").setup({
   transparent_mode = true,
 })
 vim.cmd("colorscheme gruvbox")
+
+-- Force Neovim to recognize .m files as MATLAB, not Objective-C
+vim.filetype.add({
+  extension = {
+    m = 'matlab'
+  }
+})
 -- Default options:
