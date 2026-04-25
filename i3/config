@@ -651,4 +651,4 @@ bindsym $mod+shift+z move scratchpad, scratchpad show
 bindsym $mod+c exec --no-startup-id alacritty --title "floatterm" 
 # bindsym $mod+d exec --no-startup-id alacritty --title 'fzf-menu' -e sh -c 'i3-dmenu-desktop --dmenu=fzf'
 for_window [title="floatterm"] floating enable, resize set 80ppt 80ppt, move position center, move scratchpad, scratchpad show
-for_window [title="sh"] floating enable, resize set 80ppt 80ppt, move position center
+for_window [title="^sh$"] floating enable, resize set 80ppt 80ppt, move position center
