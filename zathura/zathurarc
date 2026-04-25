@@ -3,6 +3,8 @@ set synctex-editor-command "nvr --remote-silent +%{line} %{input}"
 set recolor true
 set recolor-keephue true
 set selection-clipboard clipboard
+set scroll-step 200
+set smooth-scroll "true"
 # --- Default Startup Theme (Dark Gruvbox) ---
 set recolor-lightcolor "#282828" 
 set recolor-darkcolor "#ebdbb2"

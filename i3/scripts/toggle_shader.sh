@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Define absolute paths
-INVERT_SHADER="/home/xaver/.config/picom/shaders/invert.glsl"
+RF_SHADER="/home/xaver/.config/picom/shaders/rf.glsl"
 DIM_SHADER="/home/xaver/.config/picom/shaders/dim.glsl"
 
 # State 1: Is the INVERT shader currently running?
-if pgrep -f "invert.glsl" > /dev/null; then
+if pgrep -f "rf.glsl" > /dev/null; then
     # Switch to State 2 (Low Contrast / Dim)
     killall picom
     sleep 0.5
@@ -25,6 +25,6 @@ else
     # Switch to State 1 (Inverted)
     killall picom
     sleep 0.5
-    picom -b --window-shader-fg "$INVERT_SHADER"
-    notify-send -t 1500 "Picom" "Inverted Dark Mode"
+    picom -b --window-shader-fg "$RF_SHADER"
+    notify-send -t 1500 "Picom" "Red Filter Mode"
 fi

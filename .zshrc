@@ -11,6 +11,7 @@ export PDK_ROOT="$HOME/pdks/IHP-Open-PDK"
 export PDK="ihp-sg13g2"
 
 alias cl='~/clean.sh'
+alias cp='tee >(xclip -selection cipboard)'
 
 rg() {
     TEMPFILE="$(mktemp)"
@@ -155,3 +156,67 @@ export PATH="$PATH:/home/xaver/intelFPGA/20.1/modelsim_ase/bin"
 export PATH="$PATH:/home/xaver/intelFPGA_lite/20.1/quartus/bin"
 export PATH="$PATH:/home/xaver/LEL/plecs"
 export PATH="$PATH:/usr/local/MATLAB/R2024b/bin"
+alias del='trash-put'
+source <(fzf --zsh)
+# Zathura FZF wrapper
+fz() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: fz <extension> (e.g., fz pdf)"
+        return 1
+    fi
+
+    local ext="$1"
+    
+    local -A app_map
+    app_map=(
+        [pdf]="zathura"
+        [png]="feh"
+        [jpg]="feh"
+        [jpeg]="feh"
+        [mp4]="mpv"
+        [mkv]="mpv"
+        [gif]="feh"
+    )
+
+    local app="${app_map[$ext]:-nvim}"
+    
+    # --- PREVIEW LOGIC ---
+    # The magic wipe command to delete images from Kitty's graphics layer
+    local wipe_kitty="printf '\x1b_Ga=d\x1b\\\\'"
+
+    # Default previewer: bat or cat
+    # Notice we prepend the wipe command so text files don't render on top of old images
+    local preview_cmd="$wipe_kitty; bat --color=always --style=numbers --line-range=:500 {} 2>/dev/null || cat {} 2>/dev/null"
+    
+    # Image preview using chafa (far more stable inside fzf than icat)
+    if [[ "$ext" == "png" || "$ext" == "jpg" || "$ext" == "jpeg" || "$ext" == "gif" ]]; then
+        preview_cmd="$wipe_kitty; chafa --format=kitty --size=\${FZF_PREVIEW_COLUMNS}x\${FZF_PREVIEW_LINES} {}"
+    fi
+    
+    # PDF preview
+    if [[ "$ext" == "pdf" ]]; then
+        preview_cmd="$wipe_kitty; pdftotext {} - | head -n 100"
+    fi
+    # ---------------------
+
+    # Run fzf with the dynamic preview command
+    local file
+    file="$(fd -t f -e "$ext" | fzf --preview "$preview_cmd" --preview-window=right:60% --border)"
+    
+    # If the user cancels (ESC), wipe the terminal graphics layer and exit cleanly
+    if [[ -z "$file" ]]; then
+        eval "$wipe_kitty"
+        return
+    fi
+
+    # Wipe the terminal graphics layer one last time before opening the app
+    # (Prevents the last previewed image from getting stuck on your terminal screen)
+    eval "$wipe_kitty"
+
+    # Launch the application
+    if [[ "$app" == "nvim" ]]; then
+        "$app" "$file"
+    else
+        "$app" "$file" > /dev/null 2>&1 & disown
+    fi
+}

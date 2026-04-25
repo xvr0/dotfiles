@@ -144,4 +144,53 @@ branch = "main",
     opts = require "plugins.configs.telescope",
   },
 
+{
+    "goerz/jupytext.vim",
+    config = function()
+        -- Tells Jupytext to use the "percent" format (cells are separated by # %%)
+        vim.g.jupytext_fmt = 'py:percent'
+        
+        -- Optional: Don't show the "Jupytext: converting..." message every time
+        vim.g.jupytext_print_time = 0
+    end
+},
+{
+    "benlubas/molten-nvim",
+    version = "^1.0.0", -- Use version <2.0.0 to avoid breaking changes
+    build = ":UpdateRemotePlugins",
+    init = function()
+        -- 1. Tell Neovim exactly where your Python environment is
+        vim.g.python3_host_prog = "/home/xaver/miniconda3/bin/python3"
+
+        -- 2. Visual settings for the output window
+        vim.g.molten_output_win_max_height = 20
+        vim.g.molten_wrap_output = true
+
+        -- 3. (Optional) Image support - Uncomment this when you switch to Kitty!
+        vim.g.molten_image_provider = "image.nvim"
+
+-- Push text down so it doesn't cover the next block
+        vim.g.molten_output_virt_lines = true
+        
+        -- Keep output pinned to the cell even when you move the cursor
+        vim.g.molten_virt_text_output = true
+        
+        -- Pin images to the virtual text so they stay visible
+        vim.g.molten_image_location = "virt"
+    end,
+
+},
+
+{
+    "3rd/image.nvim",
+    opts = {
+        backend = "kitty", -- Explicitly tell it to use Kitty's graphics protocol
+        max_width = 100,
+        max_height = 12,
+        max_height_window_percentage = math.huge,
+        max_width_window_percentage = math.huge,
+        window_overlap_clear_enabled = true,
+        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+    },
+}
 }

@@ -54,8 +54,8 @@ for_window [class="."] border pixel 3
 # hide_edge_borders both
 
 # Set inner/outer gaps
-gaps inner 0
-gaps outer 0 
+gaps inner 6
+gaps outer 3 
 
 
 
@@ -179,11 +179,11 @@ bindsym $mod+r mode "resize"
 bindsym $mod+Shift+t exec --no-startup-id ~/.config/i3/scripts/toggletabs 
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id alacritty
+bindsym $mod+Return exec --no-startup-id kitty
 
-bindsym $mod+Shift+Return exec --no-startup-id alacritty -e /usr/bin/ranger
+# bindsym $mod+Shift+Return exec --no-startup-id kitty -e /usr/bin/ranger
 
-bindsym $mod+c exec --no-startup-id code --enable-proposed-api ms-toolsai.jupyter --enable-proposed-api ms-python.python
+# bindsym $mod+c exec --no-startup-id code --enable-proposed-api ms-toolsai.jupyter --enable-proposed-api ms-python.python
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -228,12 +228,26 @@ bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
+# Define a variable for faster movement (e.g., 50 pixels)
+set $window-move-amount 50 px
 
+# Move window faster with Mod+Shift+Arrows
+# bindsym $mod+Shift+Left move left $window-move-amount
+# bindsym $mod+Shift+Right move right $window-move-amount
+# bindsym $mod+Shift+Up move up $window-move-amount
+# bindsym $mod+Shift+Down move down $window-move-amount
+
+# # Optional: Fine-tune movement with Mod+Shift+Alt+Arrows (1 pixel)
+# bindsym $mod+Shift+Mod1+Left move left 1 px
+# bindsym $mod+Shift+Mod1+Right move right 1 px
+# bindsym $mod+Shift+Mod1+Up move up 1 px
+# bindsym $mod+Shift+Mod1+Down move down 1 px   
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+b move up
-bindsym $mod+Shift+o move right
+bindsym $mod+Shift+j move position 2 ppt 2 ppt
+bindsym $mod+Shift+k move position 52 ppt 2 ppt
+# bindsym $mod+Shift+k move down $window-move-amount
+bindsym $mod+Shift+b move up $window-move-amount
+bindsym $mod+Shift+o move right $window-move-amount
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -338,7 +352,7 @@ set $ws10 "10"
 
 # bind program to workspace and focus to them on startup:
 assign [class="alacritty"] $ws1
-assign [class="firefox"] $ws2
+assign [class="brave"] $ws2
 assign [class="Thunar"] $ws3
 
 # automatic set focus new window if it opens on another workspace than the current:
@@ -594,11 +608,21 @@ strip_workspace_numbers yes
 ## rofi bindings fancy application menu ($mod+d /F9 optional disabled)
 
 
-# Replace termite with alacritty
 bindsym $mod+d exec --no-startup-id alacritty --title 'fzf-menu' -e sh -c 'i3-dmenu-desktop --dmenu=fzf'
 
 # Ensure the floating window is enabled for the title
 for_window [title="fzf-menu"] floating enable, resize set 30ppt 30ppt, move position center
+
+# Make our custom ranger launcher float and center
+# Launch your engulf script with zathura and fzf arguments
+# Bind a key to launch it (e.g., Mod + Shift + R)
+# Make our fzf PDF picker float and center
+# for_window [class="fzf-pdf-picker"] floating enable, resize set 60ppt 60ppt, move position center
+#
+# # Bind a key to launch it (e.g., Mod + p for PDF)
+# bindsym $mod+d exec --no-startup-id alacritty --class 'fzf-pdf-picker' -e bash ~/.config/i3/fzf-pdf.sh
+
+
 
 exec --no-startup-id feh --bg-scale /home/xaver/.wallpaper/mono.png
 # exec --no-startup-id picom -f & 
@@ -611,3 +635,20 @@ bindsym $mod+i exec --no-startup-id /home/xaver/.config/i3/scripts/toggle_shader
 for_window [class="MATLAB R2024b - academic use" title="Workspace"] floating enable
 for_window [class="MATLAB R2024b - academic use" title="Figure.*"] floating enable
 for_window [class="Matplotlib"] floating enable
+for_window [class="matplotlib"] floating enable
+for_window [class="feh"] floating enable
+for_window [class="Alacritty"] floating enable
+# 1. Assign Zathura to the scratchpad automatically when it opens
+# 1. Setup appearance (No 'move scratchpad' here)
+# Define the look
+# 1. Assign Zathura to the scratchpad automatically when it opens
+for_window [class="Zathura"] floating enable, resize set 46 ppt 92 ppt, move position 52 ppt 2 ppt, move scratchpad,scratchpad show
+
+# 2. Create a toggle keybind (using Mod+z as an example)
+bindsym $mod+z scratchpad show
+bindsym $mod+shift+z move scratchpad, scratchpad show
+
+bindsym $mod+c exec --no-startup-id alacritty --title "floatterm" 
+# bindsym $mod+d exec --no-startup-id alacritty --title 'fzf-menu' -e sh -c 'i3-dmenu-desktop --dmenu=fzf'
+for_window [title="floatterm"] floating enable, resize set 80ppt 80ppt, move position center, move scratchpad, scratchpad show
+for_window [title="sh"] floating enable, resize set 80ppt 80ppt, move position center

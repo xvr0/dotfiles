@@ -86,5 +86,8 @@ vim.lsp.config("matlab_ls", {
 
 -- Add 'matlab_ls' to your table of servers:
 local servers = { "pyright", "html", "cssls", "lua_ls", "matlab_ls" }
-
+vim.lsp.config("pyright", {
+  -- Tell Pyright to attach to both standard Python files AND Notebooks
+  filetypes = { "python", "ipynb" },
+})
 vim.lsp.enable(servers)

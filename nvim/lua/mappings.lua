@@ -169,3 +169,29 @@ vim.keymap.set('n', '<leader>r', function()
         print("No terminal found! Open a terminal and run 'matlab -nodesktop -nosplash' first.")
     end
 end, { desc = "Run MATLAB script in existing terminal" })
+
+
+vim.keymap.set(
+    "n", 
+    "<leader><CR>", 
+    "?^# %%<CR>jV/^# %%<CR>k:<C-u>MoltenEvaluateVisual<CR>:noh<CR>", 
+    { desc = "Evaluate Cell", silent = true }
+)
+
+vim.keymap.set("n", "<leader>mi", ":MoltenInit<CR>",
+    { silent = true, desc = "Initialize the plugin" })
+vim.keymap.set("n", "<leader>e", ":MoltenEvaluateOperator<CR>",
+    { silent = true, desc = "run operator selection" })
+vim.keymap.set("n", "<leader>rl", ":MoltenEvaluateLine<CR>",
+    { silent = true, desc = "evaluate line" })
+vim.keymap.set("n", "<leader>rr", ":MoltenReevaluateCell<CR>",
+    { silent = true, desc = "re-evaluate cell" })
+vim.keymap.set("v", "<leader>r", ":<C-u>MoltenEvaluateVisual<CR>gv",
+    { silent = true, desc = "evaluate visual selection" })
+
+vim.keymap.set("n", "<leader>rd", ":MoltenDelete<CR>",
+    { silent = true, desc = "molten delete cell" })
+vim.keymap.set("n", "<leader>oh", ":MoltenHideOutput<CR>",
+    { silent = true, desc = "hide output" })
+vim.keymap.set("n", "<leader>os", ":noautocmd MoltenEnterOutput<CR>",
+    { silent = true, desc = "show/enter output" })
