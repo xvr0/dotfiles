@@ -1,54 +1,55 @@
 local o = vim.o
-vim.opt.backupcopy = "yes"
-vim.filetype.add({
-  extension = {
-    tex = "tex",
-  },
-})
-vim.filetype.add({
-  extension = {
-    gp = "gnuplot",
-    plt = "gnuplot",
-    gnuplot = "gnuplot",
-  },
-})
--- Enable indent-based folding
-vim.opt.foldmethod = "indent"   -- Use indentation for folds
-vim.opt.foldlevel = 99          -- Open all folds by default
-vim.opt.foldenable = true       -- Enable folding
 
-o.relativenumber= true
 vim.g.mapleader = " "
 
+-- UI
+o.number = true
+o.relativenumber = true
+o.cursorline = true
+o.signcolumn = "yes"
 o.laststatus = 3 -- global statusline
 o.showmode = false
-
-o.clipboard = "unnamedplus"
+o.termguicolors = true
+o.background = "dark"
+o.splitbelow = true
+o.splitright = true
+vim.opt.fillchars = { eob = " " }
 
 -- Indenting
 o.expandtab = true
 o.shiftwidth = 2
-o.smartindent = true
 o.tabstop = 2
 o.softtabstop = 2
+o.smartindent = true
 
-vim.opt.fillchars = { eob = " " }
+-- Folding (overridden by treesitter folding for buffers with a filetype)
+o.foldmethod = "indent"
+o.foldlevel = 99
+o.foldenable = true
+
+-- Search
 o.ignorecase = true
 o.smartcase = true
+
+-- Behaviour
 o.mouse = "a"
-
-o.number = true
-
-o.signcolumn = "yes"
-o.splitbelow = true
-o.splitright = true
-o.termguicolors = true
+o.clipboard = "unnamedplus"
 o.timeoutlen = 400
 o.undofile = true
-o.cursorline = true
+o.backupcopy = "yes"
+
+-- Filetypes
+vim.filetype.add {
+  extension = {
+    m = "matlab", -- not Objective-C
+    tex = "tex",
+    gp = "gnuplot",
+    plt = "gnuplot",
+    gnuplot = "gnuplot",
+  },
+}
 
 -- add binaries installed by mason.nvim to path
-local is_windows = vim.loop.os_uname().sysname == "Windows_NT"
-vim.env.PATH = vim.env.PATH .. (is_windows and ";" or ":") .. vim.fn.stdpath "data" .. "/mason/bin"
+vim.env.PATH = vim.env.PATH .. ":" .. vim.fn.stdpath "data" .. "/mason/bin"
 
 vim.api.nvim_set_hl(0, "IndentLine", { link = "Comment" })
