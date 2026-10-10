@@ -28,93 +28,31 @@ local snippets = {
     t({"import numpy as np", "import pandas as pd", "import matplotlib.pyplot as plt", ""})
   }),
 
+  s({trig="ifsave", dscr="plot for tex"},{t({"SAVE = False",
 
-  -------------------------------
-  -- MATPLOTLIB BASICS
-  -------------------------------
-  
-  -- Basic plot with X, Y, and a jump node for the label
-  s({ trig = "pltp", dscr = "plt.plot()" }, {
-    t("plt.plot("), i(1, "x"), t(", "), i(2, "y"), t(", label='"), i(3, "label"), t("')")
-  }),
-
-  -- Scatter plot
-  s({ trig = "plts", dscr = "plt.scatter()" }, {
-    t("plt.scatter("), i(1, "x"), t(", "), i(2, "y"), t(", label='"), i(3, "label"), t("')")
-  }),
-
-  -- Setup a figure with specific size (very common boilerplate)
-  s({ trig = "pltfig", dscr = "plt.figure(figsize)" }, {
-    t("plt.figure(figsize=("), i(1, "10"), t(", "), i(2, "6"), t("))")
-  }),
-
-  -- The object-oriented approach (subplots)
-  s({ trig = "pltax", dscr = "fig, ax = plt.subplots()" }, {
-    t("fig, ax = plt.subplots(figsize=("), i(1, "10"), t(", "), i(2, "6"), t("))")
-  }),
-
-  -- Formatting the plot (labels, title, legend)
-  s({ trig = "pltformat", dscr = "Add title, labels, and legend" }, {
-    t("plt.title('"), i(1, "Title"), t("')"), t({"", "plt.xlabel('"}), i(2, "X-axis"), t("')"), t({"", "plt.ylabel('"}), i(3, "Y-axis"), t("')"), t({"", "plt.legend()"})
-  }),
-
-  -- plt.show() - simple but you type it a lot!
-  s({ trig = "pltsw", dscr = "plt.show()" }, {
-    t("plt.show()")
-  }),
-
-
-  -------------------------------
-  -- HELPER / UTILITY
-  -------------------------------
-  
-  -- Quick print debugging
-  s({ trig = "pr", dscr = "print()" }, {
-    t("print("), i(1), t(")")
-  }),
-  
-  -- f-string print (highly useful for debugging variables)
-  s({ trig = "prf", dscr = "print(f'')" }, {
-    t("print(f\""), i(1), t("\")")
-  }),
-
-
-
--------------------------------
-  -- 1. MATPLOTLIB 2D LINE PLOTS
-  -------------------------------
-  -- The outer boilerplate (Figure, labels, legend, show)
-  s({ trig = "fig", dscr = "Standard Figure Boilerplate" }, {
-    t("fig, ax = plt.subplots(figsize=("), i(1, "6"), t(", "), i(2, "6"), t("))"),
-    t({"", "", ""}), 
-    i(0), -- Your cursor will end up here so you can drop your 'ax' plots
-    t({"", "", "ax.set_title('"}), i(3, "Title"), t("')"),
-    t({"", "ax.set_xlabel('"}), i(4, "X-axis"), t("')"),
-    t({"", "ax.set_ylabel('"}), i(5, "Y-axis"), t("')"),
-    t({"", "ax.legend()", "plt.show()"})
-  }),
-
-  -- The inner plot command
-  s({ trig = "ax", dscr = "ax.plot()" }, {
-    t("ax.plot("), i(1, "x"), t(", "), i(2, "y"), t(", label='"), i(3, "Label"), t("')")
-  }),
-
-
-  -------------------------------
-  -- 2. MATPLOTLIB 3D MESHGRID
-  -------------------------------
-  -- Full boilerplate for a 3D surface plot using a meshgrid
-  s({ trig = "mesh", dscr = "3D Meshgrid Surface Plot" }, {
-    t("fig, ax = plt.subplots(subplot_kw={'projection': '3d'}, figsize=("), i(1, "8"), t(", "), i(2, "6"), t("))"),
-    t({"", "", "x = np.linspace("}), i(3, "-5"), t(", "), i(4, "5"), t(", 100)"),
-    t({"", "y = np.linspace("}), i(5, "-5"), t(", "), i(6, "5"), t(", 100)"),
-    t({"", "X, Y = np.meshgrid(x, y)"}),
-    t({"", "R = np.sqrt(X**2 + Y**2) + 1e-10  # Added epsilon to avoid division by zero"}),
-    t({"", "Z = "}), i(7, "np.sin(R) / R"),
-    t({"", "", "surf = ax.plot_surface(X, Y, Z, cmap='"}), i(8, "viridis"), t("')"),
-    t({"", "fig.colorbar(surf, shrink=0.5, aspect=5)"}),
-    t({"", "", "ax.set_title('"}), i(9, "3D Surface Plot"), t("')"),
-    t({"", "plt.show()"})
-  }),
+"if SAVE:",
+"    mpl.use(\"pgf\")",
+"    mpl.rcParams.update(",
+"        {",
+"            \"pgf.texsystem\": \"pdflatex\",",
+"            \"text.usetex\": True,",
+"            \"font.family\": \"serif\",",
+"            \"font.size\": 10,",
+"            \"axes.labelsize\": 10,",
+"            \"axes.titlesize\": 10,",
+"            \"legend.fontsize\": 8,",
+"            \"xtick.labelsize\": 8,",
+"            \"ytick.labelsize\": 8,",
+"        }",
+"    )",
+"else:",
+"    mpl.rcParams.update(",
+"        {",
+"            \"font.family\": \"serif\",",
+"            \"font.size\": 10,",
+"        }",
+"    )",
+})})
 }
+
 return snippets

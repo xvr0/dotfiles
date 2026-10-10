@@ -504,29 +504,23 @@ for_window [class="urxvt"] border pixel 1
 ######################################
 
 # define colors for windows:
-set $fg #ebdbb2
+set $fg #DCD7BA
+set $bg #1F1F28
+set $red #E82424
+set $green #98BB6C
+set $yellow #E6C384
+set $blue #7E9CD8
+set $purple #957FB8
+set $aqua #7AA89F
+set $gray #727169
+set $darkgray #16161D
+set $white #DCD7BA
 
-
-set $bg #282828
-set $red #cc241d
-set $green #98971a
-set $yellow #d79921
-set $blue #458588
-set $purple #b16286
-set $aqua #539bf5
-set $gray #a89984
-set $darkgray #1e1e2e
-#client.focused_inactive		$bg	$darkblue	$grey		$black		$black
-#client.urgent		    	$urgentred	$urgentred	$white		$yellowbrown	$yellowbrown
-# Colors (Dracula)
-# class                 border  bground text    indicator child_border
-# green gruvbox
-# class                 border|backgr|text|indicator|child_border
-client.focused          $white $green $darkgray $green $green
-client.focused_inactive $darkgray $darkgray $yellow $purple $darkgray
-client.unfocused        $darkgray $darkgray $yellow $purple $darkgray
-client.urgent           $red $red $white $red $red
-
+# class                 border    backgr    text      indicator child_border
+client.focused          $darkgray     $darkgray     $white    $aqua     $purple
+client.focused_inactive $darkgray $darkgray $fg       $purple   $darkgray
+client.unfocused        $darkgray $darkgray $gray     $purple   $darkgray
+client.urgent           $red      $red      $white    $red      $red
 client.background       $darkgray
 ############################################
 # bar settings (input comes from i3blocks) #
@@ -555,17 +549,14 @@ strip_workspace_numbers yes
         # text color used for blocks that do not have a color specified.
         # workspaces section            
         #                    border  backgr. text
-     colors {
-        # bar background color
+  colors {
         background #00000000
-        # text color used for blocks that do not have a color specified.
         statusline $fg
-        # workspaces section            
         #                    border  backgr. text
-        focused_workspace    $green $green $bg
-        inactive_workspace   $bg $bg $fd
-        active_workspace     $bg $bg $fd
-        urgent_workspace     $red $red $bg
+        focused_workspace    $blue   $blue   $darkgray
+        inactive_workspace   $bg     $bg     $gray
+        active_workspace     $bg     $bg     $fg
+        urgent_workspace     $red    $red    $white
     }
 
 }
@@ -608,7 +599,7 @@ strip_workspace_numbers yes
 ## rofi bindings fancy application menu ($mod+d /F9 optional disabled)
 
 
-bindsym $mod+d exec --no-startup-id alacritty --title 'fzf-menu' -e sh -c 'i3-dmenu-desktop --dmenu=fzf'
+bindsym $mod+d exec --no-startup-id kitty --title 'fzf-menu' -e sh -c 'i3-dmenu-desktop --dmenu=fzf'
 
 # Ensure the floating window is enabled for the title
 for_window [title="fzf-menu"] floating enable, resize set 30ppt 30ppt, move position center
@@ -652,3 +643,10 @@ bindsym $mod+c exec --no-startup-id alacritty --title "floatterm"
 # bindsym $mod+d exec --no-startup-id alacritty --title 'fzf-menu' -e sh -c 'i3-dmenu-desktop --dmenu=fzf'
 for_window [title="floatterm"] floating enable, resize set 80ppt 80ppt, move position center, move scratchpad, scratchpad show
 for_window [title="^sh$"] floating enable, resize set 80ppt 80ppt, move position center
+for_window [class="PLECS"] floating enable
+# Force Octave plot windows to float
+for_window [class="octave-gui" title="^Figure"] floating enable
+# Launch MATLAB (Java UI fix included)
+bindsym $mod+m exec env _JAVA_AWT_WM_NONREPARENTING=1 ~/matlab_latest/bin/matlab -desktop
+
+for_window [class="fiji-Main"] floating enable

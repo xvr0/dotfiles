@@ -1,0 +1,65 @@
+# ==============================================================================
+# FONT SETTINGS
+# ==============================================================================
+# Note: Kitty is very smart about fonts. If "JetBrainsMonoNerdFontMono" doesn't 
+# load, try "JetBrainsMono Nerd Font Mono" with spaces.
+font_family      JetBrainsMonoNerdFontMono
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+
+font_size 24.0
+
+# ==============================================================================
+# WINDOW SETTINGS
+# ==============================================================================
+# Start with exact column and line dimensions
+remember_window_size  no
+initial_window_width  140c
+initial_window_height 38c
+
+# Window padding (x and y)
+window_padding_width 5
+
+# Window decorations (full is default, but we can be explicit)
+hide_window_decorations no
+
+# Background opacity
+background_opacity 1.0
+
+# ==============================================================================
+# SCROLLING
+# ==============================================================================
+scrollback_lines 10000
+
+# Kitty uses wheel multiplier for mouse scrolling
+wheel_scroll_multiplier 3.0
+
+# ==============================================================================
+# COLOR SCHEME (Gruvbox Dark)
+# ==============================================================================
+background #001e26
+foreground #708183
+cursor #708183
+selection_background #002731
+color0 #002731
+color8 #001e26
+color1 #d01b24
+color9 #bd3612
+color2 #728905
+color10 #465a61
+color3 #a57705
+color11 #52676f
+color4 #2075c7
+color12 #708183
+color5 #c61b6e
+color13 #5856b9
+color6 #259185
+color14 #81908f
+color7 #e9e2cb
+color15 #fcf4dc
+selection_foreground #001e26
+
+# Force Kitty to send the exact escape sequences for C-Tab and C-S-Tab
+map ctrl+tab send_text all \x1b[27;5;9~
+map ctrl+shift+tab send_text all \x1b[27;6;9~

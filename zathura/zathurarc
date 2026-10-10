@@ -1,6 +1,6 @@
 # --- Base Settings ---
 set synctex-editor-command "nvr --remote-silent +%{line} %{input}"
-set recolor true
+# set recolor true
 set recolor-keephue true
 set selection-clipboard clipboard
 set scroll-step 200

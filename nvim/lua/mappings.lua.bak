@@ -1,0 +1,305 @@
+local map = vim.keymap.set
+vim.g.mapleader = " "
+
+-- Global diagnostic keymaps
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+-------------------------------
+-- BUFFER & NORMAL MAPS
+-------------------------------
+map("n", "<leader><leader>", "<cmd> w  <CR>")
+map("n", "zz", "ZZ")
+map("n", "<leader>nh", "<cmd> noh <CR>")
+map("n", "<leader>u", "<cmd> undo <CR>")
+map("n", "<leader>r", "<cmd> redo <CR>")
+map("v", "J", ":m '>+1<CR>gv=gv")
+map("v", "K", ":m '<-2<CR>gv=gv")
+map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+map("n", "<C-s>", "<cmd> w <CR>")
+map("n", "<C-c>", "<cmd> %y+ <CR>") -- copy whole filecontent
+
+-------------------------------
+-- TERMINAL MODE MAPS
+-------------------------------
+map("t", "<C-n>", "<C-\\><C-n>", { desc = "Enter normal mode in terminal" })
+map("t", "<S-Tab>", "<C-\\><C-n><cmd> BufferLineCyclePrev <CR>")
+map("t", "<C-q>", "<C-\\><C-n><cmd> bd <CR>")
+
+map("t", "<C-h>", "<C-\\><C-n><C-w>h")
+map("t", "<C-j>", "<C-\\><C-n><C-w>j")
+map("t", "<C-k>", "<C-\\><C-n><C-w>k")
+map("t", "<C-l>", "<C-\\><C-n><C-w>l")
+
+
+local function OpenPDFUnderCursor()
+    local filepath = vim.fn.expand('<cfile>')
+    
+    -- Strip any surrounding quotes that <cfile> might accidentally capture
+    filepath = filepath:gsub('^["\']+', ''):gsub('["\']+$', '')
+
+    if not filepath:match('%.pdf$') then
+        print("Not a PDF. Cursor is on: " .. filepath)
+        return
+    end
+
+    -- Convert to absolute path to guarantee filereadable finds it
+    local full_path = vim.fn.fnamemodify(filepath, ":p")
+
+    if vim.fn.filereadable(full_path) == 1 then
+        local job_id = vim.fn.jobstart({ "zathura", full_path }, { detach = true })
+        if job_id <= 0 then
+            print("Error: Failed to launch zathura. Is it installed and on your PATH?")
+        else
+            print("Success! Opened: " .. full_path)
+        end
+    else
+        print("File not found on disk: " .. full_path)
+    end
+end
+
+vim.keymap.set("n", "<leader>pd", OpenPDFUnderCursor, { desc = "Open PDF under cursor" })
+-------------------------------
+-- TERMINAL & RUNNER LOGIC
+-------------------------------
+local function toggle_terminal()
+  local term_buf = nil
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == "terminal" then
+      term_buf = buf
+      break
+    end
+  end
+
+  if term_buf then
+    local win_found = nil
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+      if vim.api.nvim_win_get_buf(win) == term_buf then
+        win_found = win
+        break
+      end
+    end
+
+    if win_found then
+      vim.api.nvim_win_close(win_found, false)
+    else
+      vim.cmd("botright split")
+      vim.api.nvim_set_current_buf(term_buf)
+      vim.cmd("startinsert")
+    end
+  else
+    vim.cmd("botright split | term")
+    vim.cmd("startinsert")
+  end
+end
+
+vim.keymap.set('n', '<C-t>', toggle_terminal, { noremap = true, silent = true, desc = "Toggle Terminal" })
+vim.keymap.set('t', '<C-t>', toggle_terminal, { noremap = true, silent = true, desc = "Toggle Terminal" })
+map("n", "<leader>bt", "<cmd>bd!<CR>")
+
+_G.runner_terminals = _G.runner_terminals or {}
+
+local function RunFile()
+  vim.cmd('w')
+  local filetype = vim.bo.filetype
+  local filename = vim.fn.shellescape(vim.fn.expand('%'))
+  local full_path = vim.fn.expand('%:p')
+
+  local function send_to_term(win_name, cmd, is_repl, repl_start_cmd)
+    local buf = _G.runner_terminals[win_name]
+
+    if buf and not vim.api.nvim_buf_is_valid(buf) then buf = nil end
+    if buf and vim.bo[buf].buftype ~= 'terminal' then buf = nil end
+
+    local is_new = false
+    if not buf then
+      vim.cmd('botright split | term')
+      buf = vim.api.nvim_get_current_buf()
+      _G.runner_terminals[win_name] = buf
+      is_new = true
+    else
+      local win_found = false
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(win) == buf then
+          vim.api.nvim_set_current_win(win)
+          win_found = true
+          break
+        end
+      end
+      if not win_found then
+        vim.cmd('botright split')
+        vim.api.nvim_set_current_buf(buf)
+      end
+    end
+
+    vim.cmd('startinsert')
+    local chan = vim.bo[buf].channel
+
+    if is_new and is_repl and repl_start_cmd then
+      vim.fn.chansend(chan, repl_start_cmd .. "\r")
+    else
+      vim.fn.chansend(chan, cmd .. "\r")
+    end
+  end
+
+  if filetype == 'python' then
+    send_to_term('runner', 'python3 ' .. filename, false)
+  elseif filetype == 'c' then
+    local base_name = vim.fn.expand('%:r')
+    send_to_term('runner', 'gcc ' .. filename .. ' -o ' .. base_name .. ' -lfftw3 -lm && ./' .. base_name, false)
+  elseif filetype == 'sh' or filetype == 'bash' then
+    send_to_term('runner', 'bash ' .. filename, false)
+  elseif filetype == 'julia' then
+    local j_cmd = 'include("' .. full_path .. '")'
+    local j_start = 'julia -i "' .. full_path .. '"'
+    send_to_term('julia_repl', j_cmd, true, j_start)
+  elseif filetype == 'matlab' then
+    local m_cmd = "run('" .. full_path .. "')"
+    local m_start = 'matlab -nodesktop -nosplash -r "' .. m_cmd .. '"'
+    send_to_term('matlab_repl', m_cmd, true, m_start)
+  elseif filetype == 'cpp' then
+    if vim.fn.filereadable('CMakeLists.txt') == 1 then
+      send_to_term('runner',
+        'cmake -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && cmake --build build && echo ---Output--- && \\$(find build -maxdepth 1 -type f -executable | head -n 1)',
+        false)
+    else
+      local base_name = vim.fn.expand('%:r')
+      send_to_term('runner',
+        'g++ $([ -f compile_flags.txt ] && cat compile_flags.txt ) ' ..
+        filename .. ' -o ' .. base_name .. ' && ./' .. base_name, false)
+    end
+  end
+end
+
+vim.keymap.set('n', '<leader>x', RunFile, { desc = 'Run/Execute Current File', silent = true })
+map("n", "<leader>ht", "<cmd> terminal htop <CR>")
+
+local function RepeatLastRunnerCmd()
+  local buf = _G.runner_terminals['runner']
+
+  if buf and not vim.api.nvim_buf_is_valid(buf) then buf = nil end
+  if buf and vim.bo[buf].buftype ~= 'terminal' then buf = nil end
+
+  if not buf then
+    vim.notify("No runner terminal exists yet. Run <leader>x first.", vim.log.levels.WARN)
+    return
+  end
+
+  local win_found = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_buf(win) == buf then
+      vim.api.nvim_set_current_win(win)
+      win_found = true
+      break
+    end
+  end
+
+  if not win_found then
+    vim.cmd('botright split')
+    vim.api.nvim_set_current_buf(buf)
+  end
+
+  vim.cmd('startinsert')
+  local chan = vim.bo[buf].channel
+  vim.fn.chansend(chan, "!!\r\r")
+end
+
+vim.keymap.set("n", "<leader>y", RepeatLastRunnerCmd, { desc = "Repeat Last Shell Command", silent = true })
+-------------------------------
+-- OTHER PLUGINS & CONFIG
+-------------------------------
+if vim.g.vscode then
+  local vscode = require('vscode')
+  vim.keymap.set('n', '<leader>t', function() vscode.action('workbench.action.terminal.focus') end)
+  vim.keymap.set('n', '<leader>ff', function() vscode.action('workbench.action.quickOpen') end)
+else
+  vim.keymap.set('n', '<leader>ff', '<cmd> Telescope find_files <CR>')
+end
+
+vim.g.ranger_map_keys = 0
+map("n", "<leader>fr", "<cmd> Ranger <CR>")
+map("n", "<leader>fo", "<cmd> Telescope oldfiles <CR>")
+map("n", "<leader>fw", "<cmd> Telescope live_grep <CR>")
+map("n", "<leader>gt", "<cmd> Telescope git_status <CR>")
+
+local function ToggleSpell(lang)
+  if vim.o.spell and vim.o.spelllang == lang then
+    vim.o.spell = false
+  else
+    vim.o.spell = true
+    vim.o.spelllang = lang
+  end
+end
+map("n", "<leader>spe", function() ToggleSpell("en_us") end)
+map("n", "<leader>spg", function() ToggleSpell("de_de") end)
+
+map("n", "<Tab>", "<cmd> BufferLineCycleNext <CR>")
+map("n", "<S-Tab>", "<cmd> BufferLineCyclePrev <CR>")
+map("n", "<C-q>", "<cmd> bd <CR>")
+
+map("n", "<leader>/", "gcc", { remap = true })
+map("v", "<leader>/", "gc", { remap = true })
+
+map("n", "<leader>fm", function() require("conform").format() end)
+
+local function EditSnippets()
+  local ft = vim.bo.filetype
+  if ft == "" then return end
+  vim.cmd("edit " .. vim.fn.expand("~/.config/nvim/snips/" .. ft .. ".lua"))
+end
+map("n", "<leader>sn", EditSnippets, { desc = "Edit Snippets for Current Filetype", silent = true })
+
+-------------------------------
+-- NATIVE REPL EVALUATION
+-------------------------------
+local function get_active_terminal()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == "terminal" then return buf end
+  end
+  return nil
+end
+
+local function SendCellToREPL()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local ft = vim.bo.filetype
+
+  local pattern_vim = '^# %%'
+  local pattern_lua = '^# %%'
+  if ft == 'typst' then
+    pattern_vim = '```'
+    pattern_lua = '```'
+  elseif ft == 'matlab' then
+    pattern_vim = '^%%'
+    -- Lua needs %% to match a literal %
+    pattern_lua = '^%%%%'
+  end
+
+  local start_line = vim.fn.search(pattern_vim, 'bnW')
+  start_line = (start_line == 0) and 1 or (start_line + 1)
+
+  local end_line = vim.fn.search(pattern_vim, 'nW')
+  end_line = (end_line == 0) and vim.api.nvim_buf_line_count(0) or (end_line - 1)
+
+  if vim.api.nvim_get_current_line():find(pattern_lua) then
+    start_line = cursor[1] + 1
+    end_line = vim.fn.search(pattern_vim, 'nW')
+    end_line = (end_line == 0) and vim.api.nvim_buf_line_count(0) or (end_line - 1)
+  end
+
+  if start_line > end_line then return end
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+  table.insert(lines, "")
+
+  local term_buf = get_active_terminal()
+  if term_buf then
+    _G.last_repl_start_line = vim.api.nvim_buf_line_count(term_buf)
+    vim.fn.chansend(vim.bo[term_buf].channel, lines)
+    local next_cell = vim.fn.search(pattern_vim, 'W')
+    if next_cell > 0 then vim.api.nvim_win_set_cursor(0, { next_cell, 0 }) end
+  else
+    vim.notify("No active terminal found! Open one with <leader>t first.", vim.log.levels.WARN)
+  end
+end
+
+
+
+vim.keymap.set("n", "<leader>re", SendCellToREPL, { desc = "Evaluate Cell Only", silent = true })

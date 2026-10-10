@@ -16,40 +16,125 @@ return {
     { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
     { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
   },
+
+{
+    "rebelot/kanagawa.nvim",
+    priority = 1000,
+    config = function()
+        require('kanagawa').setup({
+            compile = false,             -- enable compiling the colorscheme
+            undercurl = true,            -- enable undercurls
+            commentStyle = { italic = true },
+            functionStyle = {},
+            keywordStyle = { italic = true},
+            statementStyle = { bold = true },
+            typeStyle = {},
+            transparent = true,          -- do not set background color
+            dimInactive = false,         -- dim inactive window `:h hl-NormalNC`
+            terminalColors = true,       -- define vim.g.terminal_color_{0,17}
+            
+            colors = {                   
+                palette = {},
+                theme = { 
+                    wave = {}, 
+                    lotus = {}, 
+                    dragon = {}, 
+                    all = {
+                        ui = {
+                            bg_gutter = "none" -- Removes the distinct background from line numbers
+                        }
+                    } 
+                },
+            },
+            
+            overrides = function(colors) 
+                local theme = colors.theme
+                return {
+                    -- Dark completion (popup) menu fixes (autocomplete, snippets)
+                    Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 },
+                    PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+                    PmenuSbar = { bg = theme.ui.bg_m1 },
+                    PmenuThumb = { bg = theme.ui.bg_p2 },
+
+                    -- Transparent Floating Windows (Lazy, Mason, Hover documentation)
+                    NormalFloat = { bg = "none" },
+                    FloatBorder = { bg = "none" },
+                    FloatTitle = { bg = "none" },
+                    NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
+                    LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+                    MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+
+                    -- Borderless Telescope[cite: 2]
+                    TelescopeTitle = { fg = theme.ui.special, bold = true },
+                    TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+                    TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+                    TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+                    TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+                    TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+                    TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+                    
+                    -- Bufferline backgrounds
+                    BufferLineFill = { bg = theme.ui.bg },
+                    BufferLineBackground = { bg = theme.ui.bg_m3 },
+                }
+            end,
+            
+            theme = "wave",              -- Load "wave" theme
+            background = {               -- map the value of 'background' option to a theme
+                dark = "wave",           
+                light = "lotus"
+            },
+        })
+
+        -- setup must be called before loading
+        vim.cmd("colorscheme kanagawa")
+    end,
+},
+
 {
   "lervag/vimtex",
   lazy = false,     -- we don't want to lazy load VimTeX
   -- tag = "v2.15", -- uncomment to pin to a specific release
-  init = function()
-    -- VimTeX configuration goes here, e.g.
-    vim.g.vimtex_view_method = "zathura"
-    vim.g.vimtex_compiler_latexmk = {
-      options = {
-        "-shell-escape",
-      }
-    }
-    vim.g.vimtex_quickfix_mode=0
-    vim.g.vimtex_spell_enabled = 1
-    vim.g.concceallevel=2
-    vim.g.tex_conceal="abdmg"
-  end
+init = function()
+  vim.g.vimtex_view_method = "zathura"
+  
+  -- 1. Tell Vimtex to use lualatex as the default engine globally
+  vim.g.vimtex_compiler_latexmk_engines = {
+    _ = '-lualatex'
+  }
+  
+  -- 2. Restore defaults alongside your custom -shell-escape flag
+  vim.g.vimtex_compiler_latexmk = {
+    build_dir = '',
+    callback = 1,
+    continuous = 1,
+    executable = 'latexmk',
+    hooks = {},
+    options = {
+      '-verbose',
+      '-file-line-error',
+      '-synctex=1',
+      '-interaction=nonstopmode',
+      '-shell-escape',
+    },
+  }
+
+  vim.g.vimtex_quickfix_mode = 0
+  vim.g.vimtex_spell_enabled = 1
+  
+  vim.opt.conceallevel = 2
+  vim.g.tex_conceal = "abdmg"
+end
 },
   { "nvim-tree/nvim-web-devicons", opts = {} },
   { "echasnovski/mini.statusline", opts = {} },
   { "lewis6991/gitsigns.nvim", opts = {} },
 
-  { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = function()
-    require "plugins.configs.gruvbox"
-  end
-},
-{
-  "jbyuki/nabla.nvim",
-  keys = {
-    { "<leader>p", function() require("nabla").popup() end, desc = "Preview math popup" },
-    -- Add this new line:
-    { "<leader>n", function() require("nabla").toggle_virt() end, desc = "Toggle inline math" },
-  },
-},
+
+--   { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = function()
+--     require "plugins.configs.gruvbox"
+--   end
+-- },
 {
   "let-def/texpresso.vim",
   ft = { "tex", "latex" }, -- Only load this plugin for LaTeX files
@@ -86,12 +171,10 @@ branch = "main",
 {
 "L3MON4D3/LuaSnip",
   config = function()
-    -- 1. Load global VSCode snippets, BUT explicitly exclude VHDL
     require("luasnip.loaders.from_vscode").lazy_load({
       exclude = { "vhdl" }
     })
     
-    -- 2. Load custom VSCode JSON snippets from your snips directory (if any)
     require("luasnip.loaders.from_vscode").lazy_load({ 
       paths = { vim.fn.stdpath("config") .. "/snips" } 
     })
@@ -144,53 +227,75 @@ branch = "main",
     opts = require "plugins.configs.telescope",
   },
 
+
 {
-    "goerz/jupytext.vim",
-    config = function()
-        -- Tells Jupytext to use the "percent" format (cells are separated by # %%)
-        vim.g.jupytext_fmt = 'py:percent'
-        
-        -- Optional: Don't show the "Jupytext: converting..." message every time
-        vim.g.jupytext_print_time = 0
-    end
+  "folke/snacks.nvim",
+  priority = 1000,
+  lazy = false,
+  opts = {
+    image = { 
+      enabled = true,
+      doc = {
+        enabled = false, -- Disables automatic inline rendering for Typst, Markdown, and LaTeX
+      },
+    }, 
+  }
 },
+  
+  -- -- 2. The LaTeX previewer itself
+  -- {
+  --   "sonv/latex-preview.nvim",
+  --   dependencies = { "folke/snacks.nvim" },
+  --   ft = { "tex" }, -- Only load when editing LaTeX files
+  --   keys = {
+  --     { "lp", "LatexPreview toggle", desc = "Toggle LaTeX Preview" },
+  --   },
+  --   opts = {
+  --     render = {
+  --       -- Default is usually 300. 
+  --       -- If the math pops up too small on your i3 setup, increase this to 600.
+  --       density = 300, 
+  --     }
+  --   }
+  -- },
+
+-- {
+--   "chomosuke/typst-preview.nvim",
+--   lazy = false,
+--   version = "1.*",
+--   build = function() require("typst-preview").update() end,
+--   keys = {
+--     { "<leader>tp", "<cmd>TypstPreview<cr>", desc = "Typst Preview" },
+--     { "<leader>ts", "<cmd>TypstPreviewSync<cr>", desc = "Typst Preview Sync" },
+--     { "<leader>tt", "<cmd>TypstPreviewToggle<cr>", desc = "Typst Preview Toggle" },
+--   },
+--   opts = {
+--     live_as_you_type = true,
+--
+--     -- ADD THIS LINE:
+--     -- Forces Brave to open without tabs or a search bar.
+--     -- (If 'brave' command isn't found, try 'brave-browser --app=%s')
+--     -- open_cmd = "brave --app=%s", 
+--   },
+-- },
+
 {
-    "benlubas/molten-nvim",
-    version = "^1.0.0", -- Use version <2.0.0 to avoid breaking changes
-    build = ":UpdateRemotePlugins",
-    init = function()
-        -- 1. Tell Neovim exactly where your Python environment is
-        vim.g.python3_host_prog = "/home/xaver/miniconda3/bin/python3"
-
-        -- 2. Visual settings for the output window
-        vim.g.molten_output_win_max_height = 20
-        vim.g.molten_wrap_output = true
-
-        -- 3. (Optional) Image support - Uncomment this when you switch to Kitty!
-        vim.g.molten_image_provider = "image.nvim"
-
--- Push text down so it doesn't cover the next block
-        vim.g.molten_output_virt_lines = true
-        
-        -- Keep output pinned to the cell even when you move the cursor
-        vim.g.molten_virt_text_output = true
-        
-        -- Pin images to the virtual text so they stay visible
-        vim.g.molten_image_location = "virt"
-    end,
-
-},
-
-{
-    "3rd/image.nvim",
-    opts = {
-        backend = "kitty", -- Explicitly tell it to use Kitty's graphics protocol
-        max_width = 100,
-        max_height = 12,
-        max_height_window_percentage = math.huge,
-        max_width_window_percentage = math.huge,
-        window_overlap_clear_enabled = true,
-        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+    "jmbuhr/otter.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
     },
-}
+    config = function()
+      -- Automatically activate Otter for Typst files
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "typst",
+        callback = function()
+          local otter = require("otter")
+          -- Tell Otter to look for embedded Python and activate its LSP
+          otter.activate({ "python","julia","matlab" }, true, true, nil)
+        end,
+      })
+    end,
+  }
+
+
 }

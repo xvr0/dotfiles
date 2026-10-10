@@ -16,202 +16,103 @@ local function M() return vim.fn["vimtex#syntax#in_mathzone"]() == 1 end
 
 local symbols = {
   -- Greek lowercase
-  { trig = "@a",      tex = "\\alpha " },
-  { trig = "alpha",      tex = "\\alpha " },
-  { trig = "@b",       tex = "\\beta " },
-  { trig = "beta",       tex = "\\beta " },
-  { trig = "@g",      tex = "\\gamma " },
-  { trig = "gamma",      tex = "\\gamma " },
-  { trig = "@d",      tex = "\\delta " },
-  { trig = "delta",      tex = "\\delta " },
-  { trig = "@e",    tex = "\\epsilon " },
-  { trig = "epsilon",    tex = "\\epsilon " },
-  { trig = "@ve", tex = "\\varepsilon " },
-  { trig = "varepsilon", tex = "\\varepsilon " },
-  { trig = "@z",       tex = "\\zeta " },
-  { trig = "zeta",       tex = "\\zeta " },
---  { trig = "@e",        tex = "\\eta " },
-  { trig = "@q",      tex = "\\theta " },
-  { trig = "theta",      tex = "\\theta " },
-  { trig = "@vte",   tex = "\\vartheta " },
-  { trig = "vartheta",   tex = "\\vartheta " },
-  { trig = "@i",       tex = "\\iota " },
-  { trig = "iota",       tex = "\\iota " },
-  { trig = "@k",      tex = "\\kappa " },
-  { trig = "kappa",      tex = "\\kappa " },
-  { trig = "@vk",   tex = "\\varkappa " },
-  { trig = "varkappa",   tex = "\\varkappa " },
-  { trig = "@l",     tex = "\\lambda " },
-  { trig = "lambda",     tex = "\\lambda " },
-  { trig = "@m",         tex = "\\mu " },
-  { trig = "mu",         tex = "\\mu " },
-  { trig = "@nu",         tex = "\\nu " },
-  { trig = "nu",         tex = "\\nu " },
-  { trig = "@na",         tex = "\\nabla " },
-  { trig = "nabla",         tex = "\\nabla " },
-  { trig = "@x",         tex = "\\xi " },
-  { trig = "xi",         tex = "\\xi " },
-  { trig = "@p",         tex = "\\pi " },
-  { trig = "pi",         tex = "\\pi " },
-  { trig = "@vp",      tex = "\\varpi " },
-  { trig = "varpi",      tex = "\\varpi " },
-  { trig = "@r",        tex = "\\rho " },
-  { trig = "rho",        tex = "\\rho " },
-  { trig = "@vr",     tex = "\\varrho " },
-  { trig = "varrho",     tex = "\\varrho " },
-  { trig = "@s",      tex = "\\sigma " },
-  { trig = "sigma",      tex = "\\sigma " },
-  { trig = "@vs",   tex = "\\varsigma " },
-  { trig = "varsigma",   tex = "\\varsigma " },
-  { trig = "@t",        tex = "\\tau " },
-  { trig = "tau",        tex = "\\tau " },
-  { trig = "@u",    tex = "\\upsilon " },
-  { trig = "upsilon",    tex = "\\upsilon " },
-  { trig = "@f",        tex = "\\phi " },
-  { trig = "phi",        tex = "\\phi " },
-  { trig = "@vf",     tex = "\\varphi " },
-  { trig = "varphi",     tex = "\\varphi " },
-  { trig = "@c",        tex = "\\chi " },
-  { trig = "chi",        tex = "\\chi " },
-  { trig = "@ps",        tex = "\\psi " },
-  { trig = "psi",        tex = "\\psi " },
-  { trig = "@w",      tex = "\\omega " },
-  { trig = "omega",      tex = "\\omega " },
+  { trig = "@a",       tex = "\\alpha" },
+  { trig = "alpha",    tex = "\\alpha" },
+  { trig = "@b",       tex = "\\beta" },
+  { trig = "beta",     tex = "\\beta" },
+  { trig = "@g",       tex = "\\gamma" },
+  { trig = "gamma",    tex = "\\gamma" },
+  { trig = "@d",       tex = "\\delta" },
+  { trig = "delta",    tex = "\\delta" },
+  { trig = "@e",       tex = "\\epsilon" },
+  { trig = "epsilon",  tex = "\\epsilon" },
+  { trig = "@z",       tex = "\\zeta" },
+  { trig = "zeta",     tex = "\\zeta" },
+  { trig = "@q",       tex = "\\theta" },
+  { trig = "theta",    tex = "\\theta" },
+  { trig = "@k",       tex = "\\kappa" },
+  { trig = "kappa",    tex = "\\kappa" },
+  { trig = "@l",       tex = "\\lambda" },
+  { trig = "lambda",   tex = "\\lambda" },
+  { trig = "@m",       tex = "\\mu" },
+  { trig = "mu",       tex = "\\mu" },
+  { trig = "@nu",      tex = "\\nu" },
+  { trig = "nu",       tex = "\\nu" },
+  { trig = "@na",      tex = "\\nabla" },
+  { trig = "nabla",    tex = "\\nabla" },
+  { trig = "@p",       tex = "\\pi" },
+  { trig = "pi",       tex = "\\pi" },
+  { trig = "@r",       tex = "\\rho" },
+  { trig = "rho",      tex = "\\rho" },
+  { trig = "@s",       tex = "\\sigma" },
+  { trig = "sigma",    tex = "\\sigma" },
+  { trig = "@t",       tex = "\\tau" },
+  { trig = "tau",      tex = "\\tau" },
+  { trig = "@f",       tex = "\\phi" },
+  { trig = "phi",      tex = "\\phi" },
+  { trig = "@w",       tex = "\\omega" },
+  { trig = "omega",    tex = "\\omega" },
 
-  -- Greek uppercase (all plain roman)
-  { trig = "@G",    tex = "\\Gamma " },
-  { trig = "Gamma",    tex = "\\Gamma " },
-  { trig = "@D",    tex = "\\Delta " },
-  { trig = "Delta",    tex = "\\Delta " },
-  { trig = "@T",    tex = "\\Theta " },
-  { trig = "Theta",    tex = "\\Theta " },
-  { trig = "@L",   tex = "\\Lambda " },
-  { trig = "Lambda",   tex = "\\Lambda " },
-  { trig = "@X",       tex = "\\Xi " },
-  { trig = "Xi",       tex = "\\Xi " },
-  { trig = "@P",       tex = "\\Pi " },
-  { trig = "Pi",       tex = "\\Pi " },
-  { trig = "@S",    tex = "\\Sigma " },
-  { trig = "Sigma",    tex = "\\Sigma " },
-  { trig = "@U",  tex = "\\Upsilon " },
-  { trig = "Upsilon",  tex = "\\Upsilon " },
-  { trig = "@PH",      tex = "\\Phi " },
-  { trig = "Phi",      tex = "\\Phi " },
-  { trig = "@PS",      tex = "\\Psi " },
-  { trig = "Psi",      tex = "\\Psi " },
-  { trig = "@W",    tex = "\\Omega " },
-  { trig = "Omega",    tex = "\\Omega " },
+  -- Greek uppercase
+  { trig = "@G",     tex = "\\Gamma" },
+  { trig = "@D",     tex = "\\Delta" },
+  { trig = "@T",     tex = "\\Theta" },
+  { trig = "@L",     tex = "\\Lambda" },
+  { trig = "@P",     tex = "\\Pi" },
+  { trig = "@S",     tex = "\\Sigma" },
+  { trig = "@PH",    tex = "\\Phi" },
+  { trig = "@W",     tex = "\\Omega" },
 
-  
-  {trig = "*",tex="\\times "},
-  {trig = ".",tex="\\cdot "},
--------------------------------
---  BASIC ARROWS
--------------------------------
-  {trig = "->",tex="\\rightarrow "},
-  {trig = "<-",tex="\\leftarrow "},
-  {trig = "<->",tex="\\Leftrightarrow "},
-  {trig = "=>",tex="\\implies "},
-  {trig = "<=",tex="\\Leftarrow "},
-  {trig = ">=",tex="\\Rightarrow "},
-  {trig = "iff",tex="\\iff "},
-  {trig = "maps",tex="\\mapsto "},
+  -- MATH SYMBOLS
+  { trig = "*",      tex = "\\times" },
+  -- { trig = ".",      tex = "\\cdot" },
 
--------------------------------
---  RELATIONAL OPERATORS
--------------------------------
-  {trig="~=",tex="\\approx "},
-  {trig="approx",tex="\\approx "},
-  {trig="==",tex="\\equiv "},
-  {trig="equiv",tex="\\equiv "},
-  {trig="!=",tex="\\neq "},
-  {trig="neq",tex="\\neq "},
-  {trig="<=",tex="\\leq "},
-  {trig="leq",tex="\\leq "},
-  {trig=">=",tex="\\geq "},
-  {trig="geq",tex="\\geq "},
-  {trig="::",tex="\\propto "},
-  {trig="propto",tex="\\propto "},
-  {trig="~~",tex="\\sim "},
-  {trig="sim",tex="\\sim "},
-  {trig=":=",tex="\\coloneqq "},
-  {trig="coloneqq",tex="\\coloneqq "},
-  {trig="=:",tex="\\eqqcolon "},
-  {trig="eqqcolon",tex="\\eqqcolon "},
+  -- ARROWS
+  { trig = "->",     tex = "\\rightarrow" },
+  { trig = "<-",     tex = "\\leftarrow" },
+  { trig = "<->",    tex = "\\leftrightarrow" },
+  { trig = "=>",     tex = "\\Rightarrow" },
+  { trig = "<=",     tex = "\\Leftarrow" },
+  { trig = ">=",     tex = "\\Rightarrow" },
+  { trig = "maps",   tex = "\\mapsto" },
 
--------------------------------
---  SETS
--------------------------------
-  {trig="RR",tex="\\mathbb{R} "},
-  {trig="NN",tex="\\mathbb{N} "},
-  {trig="ZZ",tex="\\mathbb{Z} "},
-  {trig="QQ",tex="\\mathbb{Q} "},
-  {trig="CC",tex="\\mathbb{C} "},
-  {trig="PP",tex="\\mathbb{P} "},
-  {trig="EE",tex="\\mathbb{E} "},
-  {trig="VV",tex="\\mathbb{V} "},
+  -- RELATIONS
+  { trig = "~=",     tex = "\\approx" },
+  { trig = "==",     tex = "\\equiv" },
+  { trig = "!=",     tex = "\\neq" },
+  { trig = "<=",     tex = "\\leq" },
+  { trig = ">=",     tex = "\\geq" },
+  { trig = "::",     tex = "\\propto" },
+  { trig = "~~",     tex = "\\sim" },
 
+  -- SETS
+  { trig = "RR",     tex = "\\mathbb{R}" },
+  { trig = "NN",     tex = "\\mathbb{N}" },
+  { trig = "ZZ",     tex = "\\mathbb{Z}" },
+  { trig = "QQ",     tex = "\\mathbb{Q}" },
+  { trig = "CC",     tex = "\\mathbb{C}" },
 
-
-  {trig="Re",tex="\\Re "},
-  {trig="Im",tex="\\Im "},
-  {trig="inf",tex="infty "},
--------------------------------
---  LOGICAL SYMBOLS
--------------------------------
-  {trig="tf",tex="\\therefore "},
-  {trig="bc",tex="\\because "},
-  {trig="and",tex="\\land "},
-  {trig="or",tex="\\lor "},
-  {trig="!>",tex="\\not\\Rightarrow "},
-  {trig="neg",tex="\\neg "},
-
--------------------------------
---  SPACING
--------------------------------
-  {trig="  ",tex="\\quad "},
-  {trig="\\quad  ",tex="\\qquad "},
-  {trig=";",tex="\\; "},
-  {trig=",",tex="\\, "},
-  {trig="..",tex="\\dots "},
--------------------------------
---  CALCULUS
--------------------------------
-  {trig="dd",tex="\\,d "},
-  {trig="pp",tex="\\partial "},
-  {trig="oo",tex="\\infty "},
-  {trig="SS",tex="\\int "},
-  {trig="iSS",tex="\\iint "},
-  {trig="iiSS",tex="\\iiint "},
-  {trig="oSS",tex="\\oint "},
-
--------------------------------
---  OPERATORS
--------------------------------
-  {trig="lim",tex="\\lim "},
-  {trig="argmax",tex="\\argmax "},
-  {trig="argmin",tex="\\argmin "},
-  {trig="sup",tex="\\sup "},
-  {trig="inf",tex="\\inf "},
-  {trig="ker",tex="\\ker "},
-  {trig="span",tex="\\operatorname{span} "},
-  {trig="rank",tex="\\operatorname{rank} "},
-
--------------------------------
---  SET/LOGIC RELATIONS
--------------------------------
-  {trig="sub",tex="\\subseteq "},
-  {trig="sump",tex="\\supseteq "},
-  {trig="in",tex="\\in"},
-  {trig="nin",tex="\\notin "},
-  {trig="empty",tex="\\emptyset "},
-
+  -- CALCULUS
+  { trig = "pp",     tex = "\\partial" },
+  { trig = "oo",     tex = "\\infty" },
+  { trig = "SS",     tex = "\\int" },
+  { trig = "iSS",    tex = "\\iint" },
+  { trig = "oSS",    tex = "\\oint" },
+  { trig = "empty",  tex = "\\emptyset" },
 }
 local snippets = {}
 for _, entry in ipairs(symbols) do
   table.insert(snippets, s(
-    { trig = entry.trig, snippetType = "autosnippet", condition = M },
-    t(entry.tex)
+    { trig = entry.trig, snippetType = "autosnippet" }, -- Trigger anywhere!
+    f(function()
+      if M() then
+        -- Inside math zone: just output the character
+        return entry.tex
+      else
+        -- Outside math zone: wrap it in inline math
+        return "$" .. entry.tex .. "$"
+      end
+    end)
   ))
 end
 
@@ -486,6 +387,206 @@ s(
   }
 ),
 -- BAR
+--
+--
+-------------------------------
+--  1D PGFPLOT (Trigger: plot)
+-------------------------------
+-- Generates a simple 1D axis environment taking a CSV file.
+s(
+  { trig = "plot", wordTrig = true },
+  {
+    t({
+      "\\begin{tikzpicture}",
+      "    \\begin{axis}[",
+      "        title={",
+    }),
+    i(1, "Plot Title"),
+    t({
+      "},",
+      "        xlabel={$x$},",
+      "        ylabel={$y$},",
+      "        grid=major,",
+      "        width=10cm,",
+      "        height=7cm,",
+      "    ]",
+      "        \\addplot[",
+      "            color=blue,",
+      "            mark=*,",
+      "            thick",
+      "        ] table [",
+      "            col sep=comma,",
+      "            x index=0, % First column (independent)",
+      "            y index=1, % Second column (dependent)",
+      "        ] {",
+    }),
+    i(2, "filename.csv"),
+    t({
+      "};",
+      "    \\end{axis}",
+      "\\end{tikzpicture}"
+    })
+  }
+),
+
+-------------------------------
+--  2D HEATMAP (Solid Colormap)
+-------------------------------
+s(
+  { trig = "heatmap", wordTrig = true },
+  {
+    t({
+      "\\begin{tikzpicture}",
+      "    \\begin{axis}[",
+      "        title={",
+    }),
+    i(1, "Heatmap Title"),
+    t({
+      "},",
+      "        view={0}{90},",
+      "        colorbar,",
+      "        xlabel={$x$},",
+      "        ylabel={$y$},",
+      "        enlargelimits=false,",
+      "        axis on top, % CRITICAL: Keeps axis borders/ticks visible above the colors",
+      "    ]",
+      "        \\addplot3[",
+      "            surf,",
+      "            draw=none,   % CRITICAL: Removes the wireframe lines",
+      "            shader=flat, % Use 'flat' for clear pixels, or 'interp' for smooth gradients",
+      "        ] table [",
+      "            col sep=comma,",
+      "            x index=0,",
+      "            y index=1,",
+      "            z index=2,",
+      "        ] {",
+    }),
+    i(2, "sinc_mesh.csv"),
+    t({
+      "};",
+      "    \\end{axis}",
+      "\\end{tikzpicture}"
+    })
+  }
+),
+
+
+-------------------------------
+--  1D STEM PLOT
+-------------------------------
+s(
+  { trig = "stem", wordTrig = true },
+  {
+    t({
+      "\\begin{tikzpicture}",
+      "    \\begin{axis}[",
+      "        title={",
+    }),
+    i(1, "Stem Plot Title"),
+    t({
+      "},",
+      "        xlabel={$x$},",
+      "        ylabel={$y$},",
+      "        grid=major,",
+      "        width=10cm,",
+      "        height=7cm,",
+      "    ]",
+      "        \\addplot[",
+      "            ycomb, % This creates the stems",
+      "            color=blue,",
+      "            mark=*,",
+      "            thick",
+      "        ] table [",
+      "            col sep=comma,",
+      "            x index=0,",
+      "            y index=1,",
+      "        ] {",
+    }),
+    i(2, "filename.csv"),
+    t({
+      "};",
+      "    \\end{axis}",
+      "\\end{tikzpicture}"
+    })
+  }
+),
+
+-------------------------------
+--  2D CONTOUR PLOT
+-------------------------------
+-- Note: Requires compiling with `lualatex --shell-escape` if using gnuplot.
+s(
+  { trig = "contour", wordTrig = true },
+  {
+    t({
+      "\\begin{tikzpicture}",
+      "    \\begin{axis}[",
+      "        title={",
+    }),
+    i(1, "Contour Plot Title"),
+    t({
+      "},",
+      "        view={0}{90},",
+      "        xlabel={$x$},",
+      "        ylabel={$y$},",
+      "        colorbar,",
+      "    ]",
+      "        \\addplot3[",
+      "            contour gnuplot={levels=10, labels=false},",
+      "        ] table [",
+      "            col sep=comma,",
+      "            x index=0,",
+      "            y index=1,",
+      "            z index=2,",
+      "        ] {",
+    }),
+    i(2, "filename.csv"),
+    t({
+      "};",
+      "    \\end{axis}",
+      "\\end{tikzpicture}"
+    })
+  }
+),
+
+-------------------------------
+--  3D MESH PLOT
+-------------------------------
+s(
+  { trig = "mesh3d", wordTrig = true },
+  {
+    t({
+      "\\begin{tikzpicture}",
+      "    \\begin{axis}[",
+      "        title={",
+    }),
+    i(1, "3D Mesh Title"),
+    t({
+      "},",
+      "        view={45}{45}, % Adjust viewing angle {azimuth}{elevation}",
+      "        xlabel={$x$},",
+      "        ylabel={$y$},",
+      "        zlabel={$z$},",
+      "        grid=major,",
+      "    ]",
+      "        \\addplot3[",
+      "            mesh,",
+      "            draw=blue,",
+      "        ] table [",
+      "            col sep=comma,",
+      "            x index=0,",
+      "            y index=1,",
+      "            z index=2,",
+      "        ] {",
+    }),
+    i(2, "filename.csv"),
+    t({
+      "};",
+      "    \\end{axis}",
+      "\\end{tikzpicture}"
+    })
+  }
+),
 }
 
 for _,element in ipairs(others) do

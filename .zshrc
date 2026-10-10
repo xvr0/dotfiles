@@ -1,7 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-export OMP_NUM_THREADS=1
+export EDITOR=nvim
+# export OMP_NUM_THREADS=1
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 export ELITBOARDDIR="$HOME/nes/arm/toolchain/bin"
@@ -11,19 +11,19 @@ export PDK_ROOT="$HOME/pdks/IHP-Open-PDK"
 export PDK="ihp-sg13g2"
 
 alias cl='~/clean.sh'
-alias cp='tee >(xclip -selection cipboard)'
+alias cb='tee >(xclip -selection cipboard)'
 
-rg() {
-    TEMPFILE="$(mktemp)"
-    ranger --choosedir="$TEMPFILE" "$@"
-    if [ -f "$TEMPFILE" ]; then
-        local NEW_DIR="$(cat "$TEMPFILE")"
-        rm -f "$TEMPFILE"
-        if [ -n "$NEW_DIR" ] && [ -d "$NEW_DIR" ]; then
-            cd "$NEW_DIR"
-        fi
-    fi
-}
+# rg() {
+#     TEMPFILE="$(mktemp)"
+#     ranger --choosedir="$TEMPFILE" "$@"
+#     if [ -f "$TEMPFILE" ]; then
+#         local NEW_DIR="$(cat "$TEMPFILE")"
+#         rm -f "$TEMPFILE"
+#         if [ -n "$NEW_DIR" ] && [ -d "$NEW_DIR" ]; then
+#             cd "$NEW_DIR"
+#         fi
+#     fi
+# }
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -155,7 +155,7 @@ export PATH="$PATH:/home/xaver/intelFPGA/20.1/modelsim_ase/bin"
 # export PATH="$HOME/matlab/2025/bin:$PATH"
 export PATH="$PATH:/home/xaver/intelFPGA_lite/20.1/quartus/bin"
 export PATH="$PATH:/home/xaver/LEL/plecs"
-export PATH="$PATH:/usr/local/MATLAB/R2024b/bin"
+# export PATH="$PATH:/usr/local/MATLAB/R2024b/bin"
 alias del='trash-put'
 source <(fzf --zsh)
 # Zathura FZF wrapper
@@ -220,3 +220,15 @@ fz() {
         "$app" "$file" > /dev/null 2>&1 & disown
     fi
 }
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+export PATH=~/bin:$PATH
+alias matlab="LD_PRELOAD=\"/usr/lib/libgnutls.so.30 /usr/lib/libstdc++.so.6 /usr/lib/libgcc_s.so.1\" ~/matlab_latest/bin/matlab"
+alias tvim='NVIM_APPNAME=nvim-tmux nvim'
+export PATH="/opt/riscv-gnu-toolchain-multi/bin:$PATH"

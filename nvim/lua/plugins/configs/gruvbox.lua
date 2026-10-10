@@ -12,7 +12,7 @@ require("gruvbox").setup({
     folds = true,
   },
   strikethrough = true,
-  invert_selection = false,
+  invert_selection = true,
   invert_signs = false,
   invert_tabline = false,
   inverse = true, -- invert background for search, diffs, statuslines and errors
@@ -20,6 +20,6 @@ require("gruvbox").setup({
   palette_overrides = {},
   overrides = {},
   dim_inactive = false,
-  transparent_mode = false,
+  transparent_mode = true,
 })
 vim.cmd("colorscheme gruvbox")

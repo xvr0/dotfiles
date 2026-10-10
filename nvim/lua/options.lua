@@ -1,10 +1,17 @@
 local o = vim.o
+vim.opt.backupcopy = "yes"
 vim.filetype.add({
   extension = {
     tex = "tex",
   },
 })
-
+vim.filetype.add({
+  extension = {
+    gp = "gnuplot",
+    plt = "gnuplot",
+    gnuplot = "gnuplot",
+  },
+})
 -- Enable indent-based folding
 vim.opt.foldmethod = "indent"   -- Use indentation for folds
 vim.opt.foldlevel = 99          -- Open all folds by default

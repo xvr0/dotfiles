@@ -90,7 +90,7 @@
     frame_width = 0
 
     # Defines color of the frame around the notification window.
-    frame_color = "#282828"
+    frame_color = "#1f1f28"
     # Define a color for the separator.
     # possible values are:
     #  * auto: dunst tries to find a color fitting to the background;
@@ -292,8 +292,8 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
-foreground = "#ebdbb2"
-background = "#282828"
+foreground = "#dcd7ba"
+background = "#1f1f28"
 	highlight= "#000000"
     timeout = 10
     # Icon for notifications with low urgency, uncomment to enable
@@ -301,8 +301,8 @@ background = "#282828"
 
 [urgency_normal]
 
-foreground = "#ebdbb2"
-background = "#282828"
+foreground = "#dcd7ba"
+background = "#1f1f28"
 	highlight= "#000000"
     timeout = 10
     # Icon for notifications with normal urgency, uncomment to enable
