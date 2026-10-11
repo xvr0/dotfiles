@@ -9,7 +9,7 @@ map("n", "<C-s>", "<cmd>w<CR>")
 map("n", "zz", "ZZ")
 map("n", "<leader>nh", "<cmd>noh<CR>")
 map("n", "<leader>u", "<cmd>undo<CR>")
-map("n", "<leader>r", "<cmd>redo<CR>")
+map("n", "U", "<cmd>redo<CR>")
 map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "Copy whole file" })
 map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Substitute word under cursor" })
 

@@ -13,7 +13,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "gD", vim.lsp.buf.declaration)
     map("n", "gd", vim.lsp.buf.definition)
     map("n", "gi", vim.lsp.buf.implementation)
-    map("n", "gr", vim.lsp.buf.references)
     map("n", "<leader>D", vim.lsp.buf.type_definition)
 
     -- information
